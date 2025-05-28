@@ -23,12 +23,10 @@ function addWeatherToPage(data) {
     weather.classList.add("weather");
 
     weather.innerHTML = `
+        <h3>${data.name}</h3>
         <h2><img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" /> ${temp}°C <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" /></h2>
         <small>${data.weather[0].main}</small>
     `;
-
-    // cleanup
-    main.innerHTML = "";
 
     main.appendChild(weather);
 }
@@ -40,9 +38,15 @@ function KtoC(K) {
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const city = search.value;
+    const citiesInput = search.value;
+    const cityArray = citiesInput.split(',')
+                                 .map(city => city.trim())
+                                 .filter(city => city !== "");
 
-    if (city) {
-        getWeatherByLocation(city);
+    if (cityArray.length > 0) {
+        main.innerHTML = ""; // Clear main content once before fetching new weather
+        cityArray.forEach(city => {
+            getWeatherByLocation(city);
+        });
     }
 });
